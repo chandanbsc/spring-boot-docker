@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>spring-boot-docker</artifactId>
-	<version>0.0.5-SNAPSHOT</version>
+	<version>0.0.6-SNAPSHOT</version>
 	<name>spring-boot-docker</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -45,6 +45,7 @@
 				<groupId>org.eclipse.jkube</groupId>
 				<artifactId>kubernetes-maven-plugin</artifactId>
 				<version>${jkube.version}</version>
+				<!--
 				<configuration>
 					<enricher>
 						<config>
@@ -56,6 +57,7 @@
 						</config>
 					</enricher>
 				</configuration>
+				-->
 			</plugin>
 
 		</plugins>
