@@ -10,11 +10,16 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>spring-boot-docker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>spring-boot-docker</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<docker.user>chandanbsc</docker.user>
+		<jkube.version>1.5.1</jkube.version>
+		<jkube.generator.name>${docker.user}/spring-boot-docker:${project.version}</jkube.generator.name>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -31,11 +36,30 @@
 
 	<build>
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jkube</groupId>
+				<artifactId>kubernetes-maven-plugin</artifactId>
+				<version>${jkube.version}</version>
+				<configuration>
+					<enricher>
+						<config>
+							<jkube-service>
+								<type>NodePort</type>
+								<name>${project.artifactId}</name>
+								<port>8080:8080</port>
+							</jkube-service>
+						</config>
+					</enricher>
+				</configuration>
+			</plugin>
+
 		</plugins>
+
 	</build>
 
 </project>
