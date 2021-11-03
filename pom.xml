@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>spring-boot-docker</artifactId>
-	<version>0.0.6-SNAPSHOT</version>
+	<version>0.0.8-SNAPSHOT</version>
 	<name>spring-boot-docker</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
@@ -30,7 +30,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jolokia</groupId>
+			<artifactId>jolokia-core</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -41,27 +45,65 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.jkube</groupId>
-				<artifactId>kubernetes-maven-plugin</artifactId>
-				<version>${jkube.version}</version>
-				<!--
-				<configuration>
-					<enricher>
-						<config>
-							<jkube-service>
-								<type>NodePort</type>
-								<name>${project.artifactId}</name>
-								<port>8080:8080</port>
-							</jkube-service>
-						</config>
-					</enricher>
-				</configuration>
-				-->
-			</plugin>
 
 		</plugins>
-
 	</build>
+
+	<profiles>
+		<profile>
+			<id>kubernetes</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.jkube</groupId>
+						<artifactId>kubernetes-maven-plugin</artifactId>
+						<version>${jkube.version}</version>
+						
+						<configuration>
+							<release>17</release>
+							<!-- <images>
+								<image>
+									<name>${docker.user}/spring-boot-docker:${project.version}</name>
+								</image>
+							</images>
+							-->
+							<resources>
+								<labels>
+									<all>
+										<testProject>spring-boot-with-yaml-label-for-all</testProject>
+									</all>
+								</labels>
+							</resources>
+							<generator>
+								<config>
+									<spring-boot>
+										<color>always</color>
+									</spring-boot>
+								</config>
+							</generator>
+							
+							<helm>
+								<chart>helm-${project.artifactId}</chart>
+								<type>${profile.id}</type>
+								<icon>Template Icon</icon>
+								<description>A chart for spring boot docker</description>
+							</helm>
+						</configuration>
+						
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>resource</goal>
+									<goal>build</goal>
+									<goal>helm</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>

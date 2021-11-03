@@ -1,8 +1,8 @@
 FROM openjdk:17-jdk-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
-ARG DEPENDENCY=maven/target/dependency
-COPY ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY ${DEPENDENCY}/META-INF /app/META-INF
-COPY ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.example.springbootdocker.SpringBootDockerApplication"]
+ARG JAR_FILE=maven/target/*.jar
+COPY ${JAR_FILE} app.jar
+RUN java -version
+ENTRYPOINT ["java","-jar","/app.jar"]
+
