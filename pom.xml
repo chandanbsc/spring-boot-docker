@@ -10,9 +10,13 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>spring-boot-docker</artifactId>
-	<version>0.0.8-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>spring-boot-docker</name>
-	<description>Demo project for Spring Boot</description>
+	<description>
+		Demo project for Spring Boot
+		Includes kubernetes yml file creation
+		Includes helm chart creation
+	</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -58,9 +62,24 @@
 						<artifactId>kubernetes-maven-plugin</artifactId>
 						<version>${jkube.version}</version>
 						<configuration>
-							<properties>
-								<java.version>17</java.version>
-							</properties>
+							<resources>
+								<labels>
+									<all>
+										<testProject>spring-boot-yaml-label-all</testProject>
+									</all>
+								</labels>
+							</resources>
+							<generator>
+								<config>
+									<spring-boot>
+										<color>always</color>
+									</spring-boot>
+								</config>
+							</generator>
+							<helm>
+								<chart>sp-boot-doc-helm</chart>
+								<keywords>spring,boot,docker,k8s,helm</keywords>
+							</helm>
 						</configuration>
 						<executions>
 							<execution>
@@ -76,4 +95,5 @@
 	</profiles>
 
 </project>
+
 
