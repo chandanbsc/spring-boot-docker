@@ -103,9 +103,11 @@
 								</config>
 							</generator>
 							<enricher>
-								<jkube-controller>
-									<name>${artifactId}</name>
-								</jkube-controller>
+								<config>
+									<jkube-controller>
+										<name>${artifactId}-jkc</name>
+									</jkube-controller>
+								</config>
 							</enricher>
 							<helm>
 								<chart>sp-boot-doc-helm</chart>
