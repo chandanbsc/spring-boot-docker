@@ -65,9 +65,10 @@
 
 	<profiles>
 		<profile>
-			<id>kubernetes</id>
+			<id>dev</id>
 			<properties>
 				<from.image>openjdk:17-jdk-alpine</from.image>
+				<helm_namespace>${artifactId}</helm_namespace>
 			</properties>
 			<build>
 				<plugins>
@@ -78,7 +79,7 @@
 						<configuration>
 							<images>
 								<image>
-									<name>${docker.user}/spring-boot-docker:${project.version}</name>
+									<name>${docker.user}/${artifactId}-${profile.id}:${project.version}</name>
 									<build>
 										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
 										<assembly>
@@ -101,6 +102,11 @@
 									</spring-boot>
 								</config>
 							</generator>
+							<enricher>
+								<jkube-controller>
+									<name>${artifactId}</name>
+								</jkube-controller>
+							</enricher>
 							<helm>
 								<chart>sp-boot-doc-helm</chart>
 								<keywords>spring,boot,docker,k8s,helm</keywords>
@@ -120,6 +126,4 @@
 	</profiles>
 
 </project>
-
-
 

@@ -1,6 +1,10 @@
 spec:
   replicas: 1
   template:
+    metadata:
+      namespace: ${helm_namespace}
+      labels:
+        project: ${project.artifactId}
     spec:
       volumes:
         - name: config
