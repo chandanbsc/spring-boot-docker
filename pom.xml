@@ -68,7 +68,7 @@
 			<id>dev</id>
 			<properties>
 				<from.image>openjdk:17-jdk-alpine</from.image>
-				<helm_namespace>${artifactId}</helm_namespace>
+				<helm_namespace>${project.artifactId}</helm_namespace>
 			</properties>
 			<build>
 				<plugins>
@@ -79,7 +79,7 @@
 						<configuration>
 							<images>
 								<image>
-									<name>${docker.user}/${artifactId}-${profile.id}:${project.version}</name>
+									<name>${docker.user}/${project.artifactId}-${project.activeProfiles[0].id}:${project.version}</name>
 									<build>
 										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
 										<assembly>
@@ -105,7 +105,7 @@
 							<enricher>
 								<config>
 									<jkube-controller>
-										<name>${artifactId}-jkc</name>
+										<name>${project.artifactId}-jkc</name>
 									</jkube-controller>
 								</config>
 							</enricher>
