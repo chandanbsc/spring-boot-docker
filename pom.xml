@@ -65,10 +65,16 @@
 
 	<profiles>
 		<profile>
+<<<<<<< HEAD
 			<id>dev</id>
 			<properties>
 				<from.image>openjdk:17-jdk-alpine</from.image>
 				<helm_namespace>${artifactId}</helm_namespace>
+=======
+			<id>kubernetes</id>
+			<properties>
+				<from.image>openjdk:17-jdk-alpine</from.image>
+>>>>>>> branch 'master' of git@github.com:chandanbsc/spring-boot-docker.git
 			</properties>
 			<build>
 				<plugins>
@@ -79,7 +85,11 @@
 						<configuration>
 							<images>
 								<image>
+<<<<<<< HEAD
 									<name>${docker.user}/${artifactId}-${profile.id}:${project.version}</name>
+=======
+									<name>${docker.user}/spring-boot-docker:${project.version}</name>
+>>>>>>> branch 'master' of git@github.com:chandanbsc/spring-boot-docker.git
 									<build>
 										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
 										<assembly>
@@ -127,3 +137,9 @@
 
 </project>
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> branch 'master' of git@github.com:chandanbsc/spring-boot-docker.git
