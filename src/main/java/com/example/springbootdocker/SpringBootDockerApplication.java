@@ -20,9 +20,9 @@ public class SpringBootDockerApplication {
 		try {
 			ip = InetAddress.getLocalHost();
 			hostname = ip.getHostName();
-			retString = retString + " @ IP: " + ip.toString() + " & HostName: " + hostname;
+			retString = retString + " @ IP: " + ip.toString() + " & HostName: " + hostname + "\n";
 		} catch (UnknownHostException e) {
-			retString = "Hello Docker World @ Unknown IP & Unknown HostName";
+			retString = "Hello Docker World @ Unknown IP & Unknown HostName \n";
 			e.printStackTrace();
 		}
 		return  retString;

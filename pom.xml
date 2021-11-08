@@ -27,6 +27,9 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<docker.user>chandanbsc</docker.user>
 		<jkube.version>1.5.1</jkube.version>
+		<dekorate.version>0.10.5</dekorate.version>
+		<app_id>spd</app_id>
+		<img_id>0.1.1</img_id>
 	</properties>
 	
 	<dependencies>
@@ -45,7 +48,6 @@
 			<artifactId>jolokia-core</artifactId>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 
@@ -68,7 +70,13 @@
 			<id>dev</id>
 			<properties>
 				<from.image>openjdk:17-jdk-alpine</from.image>
-				<helm_namespace>${project.artifactId}</helm_namespace>
+				<docker_imageversion>1.0.1</docker_imageversion>
+				<env_type>dev</env_type>
+				<jkube.resourceDir>${basedir}/src/main/jkube/helmChart</jkube.resourceDir>
+				<k8s_namespace>${project.artifactId}-ns-dev</k8s_namespace>
+				<hr_name>${project.artifactId}-hr-dev</hr_name>
+				<helm_namespace>${project.artifactId}-ns-dev</helm_namespace>
+				<flux_namespace>flux-dev-ns</flux_namespace>
 			</properties>
 			<build>
 				<plugins>
@@ -79,7 +87,7 @@
 						<configuration>
 							<images>
 								<image>
-									<name>${docker.user}/${project.artifactId}-${project.activeProfiles[0].id}:${project.version}</name>
+									<name>${docker.user}/${project.artifactId}-${project.activeProfiles[0].id}:${img_id}</name>
 									<build>
 										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
 										<assembly>
@@ -107,12 +115,91 @@
 									<jkube-controller>
 										<name>${project.artifactId}-jkc</name>
 									</jkube-controller>
+									<jkube-namespace>
+										<name>${project.activeProfiles[0].k8s_namespace}</name>
+									</jkube-namespace>
+									<!-- <jkube-profile>${project.activeProfiles[0].id}</jkube-profile> -->
 								</config>
 							</enricher>
 							<helm>
-								<chart>sp-boot-doc-helm</chart>
+								<chart>Charts</chart>
 								<keywords>spring,boot,docker,k8s,helm</keywords>
+								<stableRepository>
+									<name>sbh-stable-repo</name>
+									<url>https://chandanbsc.github.io/spring-boot-dochelm/spring-boot-dochelm</url>
+									<type>ARTIFACTORY</type>
+								</stableRepository>
 							</helm>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>dev_hr</id>
+			<properties>
+				<from.image>openjdk:17-jdk-alpine</from.image>
+				<docker_imageversion>1.0.1</docker_imageversion>
+				<env_type>dev</env_type>
+				<jkube.resourceDir>${basedir}/src/main/jkube/helmRelease</jkube.resourceDir>
+				<jkube.workDir>${project.build.directory}/jkube/helmRelease</jkube.workDir>
+				<jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/helmRelease</jkube.targetDir>
+				<k8s_namespace>${project.artifactId}-ns-dev</k8s_namespace>
+				<hr_name>${project.artifactId}-hr-dev</hr_name>
+				<helm_namespace>${project.artifactId}-ns-dev</helm_namespace>
+				<flux_namespace>flux-dev-ns</flux_namespace>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.jkube</groupId>
+						<artifactId>kubernetes-maven-plugin</artifactId>
+						<version>${jkube.version}</version>
+						<configuration>
+							<images>
+								<image>
+									<name>${docker.user}/${project.artifactId}-${project.activeProfiles[0].id}:${img_id}</name>
+									<build>
+										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
+										<assembly>
+											<name>target</name>
+										</assembly>
+									</build>
+								</image>
+							</images>
+							<resources>
+								<labels>
+									<all>
+										<testProject>spring-boot-yaml-label-all</testProject>
+									</all>
+								</labels>
+							</resources>
+							<generator>
+								<config>
+									<spring-boot>
+										<color>always</color>
+									</spring-boot>
+								</config>
+							</generator>
+							<enricher>
+								<config>
+									<jkube-controller>
+										<name>${project.artifactId}-jkc</name>
+									</jkube-controller>
+									<jkube-namespace>
+										<name>${project.activeProfiles[0].k8s_namespace}</name>
+									</jkube-namespace>
+									<!-- <jkube-profile>${project.activeProfiles[0].id}</jkube-profile> -->
+								</config>
+							</enricher>
 						</configuration>
 						<executions>
 							<execution>
@@ -128,4 +215,6 @@
 	</profiles>
 
 </project>
+
+
 
