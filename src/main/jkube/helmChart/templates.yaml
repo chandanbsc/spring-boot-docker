@@ -1,0 +1,10 @@
+
+kind: Template
+parameters:
+  - name: limit_memory
+    value: "512Mi"
+  - name: helm_namespace
+    value: |
+        {{ .Release.Namespace }}
+  - name: golang_expression
+    value: "{{ .Values.i_should_be_quoted | upper | quote }}"

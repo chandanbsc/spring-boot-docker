@@ -61,7 +61,7 @@
 				<artifactId>kubernetes-maven-plugin</artifactId>
 				<version>${jkube.version}</version>
 			</plugin>
-
+			
 		</plugins>
 	</build>
 
@@ -73,6 +73,7 @@
 				<docker_imageversion>1.0.1</docker_imageversion>
 				<env_type>dev</env_type>
 				<jkube.resourceDir>${basedir}/src/main/jkube/helmChart</jkube.resourceDir>
+				<jkube.helm.outputDir>${basedir}/target/jkube/helm</jkube.helm.outputDir>
 				<k8s_namespace>${project.artifactId}-ns-dev</k8s_namespace>
 				<hr_name>${project.artifactId}-hr-dev</hr_name>
 				<helm_namespace>${project.artifactId}-ns-dev</helm_namespace>
@@ -80,6 +81,65 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.2.0</version>
+						<executions>
+							
+							<execution>
+								<id>copy-resource-1</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${jkube.helm.outputDir}/kubernetes/templates</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/templates</directory>
+											<filtering>false</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+							<execution>
+								<id>copy-resource-2</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${jkube.helm.outputDir}/kubernetes/configs</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/configs</directory>
+											<filtering>false</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							
+							<execution>
+								<id>copy-resource-3</id>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${jkube.helm.outputDir}/kubernetes/certs</outputDirectory>
+									<resources>
+										<resource>
+											<directory>src/certs</directory>
+											<filtering>false</filtering>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				
 					<plugin>
 						<groupId>org.eclipse.jkube</groupId>
 						<artifactId>kubernetes-maven-plugin</artifactId>
@@ -102,6 +162,16 @@
 										<testProject>spring-boot-yaml-label-all</testProject>
 									</all>
 								</labels>
+								<!-- <configMap>
+									<name>myconfigmap</name>
+									<entries>
+										<entry>
+											<file>src/certs/acert.txt</file>
+											<file>src/templates/_helpers.tpl</file>
+										</entry>
+									</entries>
+								</configMap>
+								-->
 							</resources>
 							<generator>
 								<config>
@@ -112,18 +182,28 @@
 							</generator>
 							<enricher>
 								<config>
+									<!--
 									<jkube-controller>
 										<name>${project.artifactId}-jkc</name>
 									</jkube-controller>
 									<jkube-namespace>
 										<name>${project.activeProfiles[0].k8s_namespace}</name>
 									</jkube-namespace>
-									<!-- <jkube-profile>${project.activeProfiles[0].id}</jkube-profile> -->
+									<jkube-profile>${project.activeProfiles[0].id}</jkube-profile>
+									-->
 								</config>
 							</enricher>
 							<helm>
 								<chart>Charts</chart>
-								<keywords>spring,boot,docker,k8s,helm</keywords>
+								<description>A Helm Chart for k8s</description>
+								
+								<!--
+								<engine>tpl</engine>
+								<additionalFiles>
+									<additionalFile>${basedir}/src/main/jkube/templates/_helpers.tpl</additionalFile>
+									<additionalFile>${basedir}/src/main/jkube/certs/acert.txt</additionalFile>
+								</additionalFiles>
+								 -->
 								<stableRepository>
 									<name>sbh-stable-repo</name>
 									<url>https://chandanbsc.github.io/spring-boot-dochelm/spring-boot-dochelm</url>
@@ -143,75 +223,6 @@
 			</build>
 		</profile>
 		
-		<profile>
-			<id>dev_hr</id>
-			<properties>
-				<from.image>openjdk:17-jdk-alpine</from.image>
-				<docker_imageversion>1.0.1</docker_imageversion>
-				<env_type>dev</env_type>
-				<jkube.resourceDir>${basedir}/src/main/jkube/helmRelease</jkube.resourceDir>
-				<jkube.workDir>${project.build.directory}/jkube/helmRelease</jkube.workDir>
-				<jkube.targetDir>${project.build.outputDirectory}/META-INF/jkube/helmRelease</jkube.targetDir>
-				<k8s_namespace>${project.artifactId}-ns-dev</k8s_namespace>
-				<hr_name>${project.artifactId}-hr-dev</hr_name>
-				<helm_namespace>${project.artifactId}-ns-dev</helm_namespace>
-				<flux_namespace>flux-dev-ns</flux_namespace>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.jkube</groupId>
-						<artifactId>kubernetes-maven-plugin</artifactId>
-						<version>${jkube.version}</version>
-						<configuration>
-							<images>
-								<image>
-									<name>${docker.user}/${project.artifactId}-${project.activeProfiles[0].id}:${img_id}</name>
-									<build>
-										<contextDir>${project.basedir}/src/main/docker/spdDockerFile</contextDir>
-										<assembly>
-											<name>target</name>
-										</assembly>
-									</build>
-								</image>
-							</images>
-							<resources>
-								<labels>
-									<all>
-										<testProject>spring-boot-yaml-label-all</testProject>
-									</all>
-								</labels>
-							</resources>
-							<generator>
-								<config>
-									<spring-boot>
-										<color>always</color>
-									</spring-boot>
-								</config>
-							</generator>
-							<enricher>
-								<config>
-									<jkube-controller>
-										<name>${project.artifactId}-jkc</name>
-									</jkube-controller>
-									<jkube-namespace>
-										<name>${project.activeProfiles[0].k8s_namespace}</name>
-									</jkube-namespace>
-									<!-- <jkube-profile>${project.activeProfiles[0].id}</jkube-profile> -->
-								</config>
-							</enricher>
-						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>resource</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 
 </project>
