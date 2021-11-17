@@ -8,3 +8,41 @@ parameters:
         {{ .Release.Namespace }}
   - name: golang_expression
     value: "{{ .Values.i_should_be_quoted | upper | quote }}"
+  - name: service
+    value: |
+      type: NodePort
+      # Port on Source
+      port: 8443
+      targetPort: 8443
+      nodePort: 32000
+      annotations: {}
+  - name: imagePullSecrets
+    value: |
+      []
+  - name: nameOverride
+    value: ""
+  - name: podAnnotations
+    value: 
+  - name: ingress
+    value: |
+      enabled: false
+      annotations: {}
+      hosts:
+        - host: chart-example.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls: []
+
+  - name: bnd
+    value: |
+      service:
+        namespace: com.example.test
+
+  - name: abc
+    value: /opt/app
+  - name: vers
+    value: 1.2.3-1
+  - name: javaOpts
+    value: -cp /opt/app/lib:/lib -Djava.ext.dirs=lib/a:lib/b
+

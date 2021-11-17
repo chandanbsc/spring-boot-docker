@@ -2,11 +2,12 @@ metadata:
   annotations:
     api.service.kubernetes.io/path: /
 spec:
-  type: NodePort
+  type: |
+    {{ .Values.name . }}
   selector:
     app: spring-boot-docker
   ports:
     - port: 8080
       targetport: 8080
-      nodePort: 32200
+      nodePort: 32000
 

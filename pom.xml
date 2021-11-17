@@ -196,7 +196,7 @@
 							<helm>
 								<chart>Charts</chart>
 								<description>A Helm Chart for k8s</description>
-								
+								<version>0.1.2</version>
 								<!--
 								<engine>tpl</engine>
 								<additionalFiles>
