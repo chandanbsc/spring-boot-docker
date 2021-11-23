@@ -194,7 +194,7 @@
 								</config>
 							</enricher>
 							<helm>
-								<chart>Charts</chart>
+								<chart>spring-boot-docker</chart>
 								<description>A Helm Chart for k8s</description>
 								<version>0.1.2</version>
 								<!--
